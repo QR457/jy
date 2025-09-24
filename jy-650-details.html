@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JY-650配比机详情</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        .hero-img { 
+            width: 100%;
+            aspect-ratio: 1 / 1; /* 图片宽高比为1:1（正方形） */
+            object-fit: cover; /* 保持图片裁剪适配，不拉伸 */
+        }
+        .specs-table { width: 100%; margin: 1.5rem 0; border-collapse: collapse; }
+        .specs-table td, .specs-table th { padding: 0.75rem; border: 1px solid #e5e7eb; }
+
+        /* 弹窗相关样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            max-width: 320px;
+            width: 100%;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .qr-code-img {
+            width: 200px;
+            height: 200px;
+            margin: 1rem auto;
+            display: block;
+        }
+        .buy-btn {
+            background-color: #f97316;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .buy-btn:hover {
+            background-color: #ea580c;
+        }
+        .close-btn {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #e5e7eb;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .close-btn:hover {
+            background-color: #d1d5db;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 面包屑导航 -->
+        <div class="mb-6">
+            <a href="123.html" class="text-sm text-gray-500 hover:text-blue-600">首页</a>
+            &nbsp;/&nbsp;
+            <span class="text-sm text-gray-700">产品详情</span>
+        </div>
+
+        <!-- 产品主图（正方形比例） -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <img src="19955cba72a6c969e30f6b5b2ce695f4.jpg" 
+                 alt="JY-650配比机" 
+                 class="hero-img"
+                 onerror="this.src='https://via.placeholder.com/600x600?text=产品图加载中'"> <!-- 图片加载失败时显示正方形占位图 -->
+        </div>
+
+        <!-- 产品信息区域（新增“立即购买”按钮） -->
+        <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+            <h1 class="text-2xl font-bold text-primary mb-2">JY-650智能配比机（ID: 1）</h1>
+            <p class="text-gray-600 mb-4">
+                高精度伺服控制，支持3-5种原料动态配比，适配压铸、注塑等工业场景<br>
+                （根据URL参数ID=1加载具体型号数据）
+            </p>
+
+            <!-- 核心技术参数 -->
+            <h3 class="text-lg font-medium text-gray-800 mb-3">核心技术参数</h3>
+            <table class="specs-table">
+                <tr><th>型号</th><td>JY-650</td></tr>
+                <tr><th>最大配比精度</th><td>±0.5%</td></tr>
+                <tr><th>原料通道</th><td>3路（可扩展至5路）</td></tr>
+                <tr><th>适用温度</th><td>-10℃ ~ 60℃</td></tr>
+                <tr><th>电源</th><td>AC 220V 50Hz</td></tr>
+            </table>
+
+            <!-- 功能亮点 -->
+            <h3 class="text-lg font-medium text-gray-800 mt-4">功能亮点</h3>
+            <ul class="list-disc pl-6 mb-4">
+                <li>智能故障诊断系统（通过LED屏实时显示）</li>
+                <li>支持RS485/Modbus协议对接PLC</li>
+                <li>标配10寸触控屏，支持配方存储（最多50组）</li>
+            </ul>
+
+            <!-- 价格、咨询、购买操作区 -->
+            <div class="mt-6 border-t pt-4 flex flex-wrap items-center justify-between">
+                <span class="text-2xl font-bold text-red-600">¥ 24000 起</span>
+                <div class="flex gap-4 mt-2 sm:mt-0">
+                    <a href="#contact" class="text-blue-600 hover:underline">立即咨询</a>
+                    <button class="buy-btn" id="buyButton">立即购买</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 支付二维码弹窗（默认隐藏） -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content">
+            <h3 class="text-lg font-semibold mb-2">请扫描二维码支付</h3>
+            <!-- 替换为实际支付二维码图片路径 -->
+            <img src="76dc5af6f702fb8ba70341839f3184f5.jpg?text=支付二维码" alt="支付二维码" class="qr-code-img">
+            <p class="text-gray-600 mb-2">支付金额：¥24000 起</p>
+            <p class="text-sm text-gray-500">支付完成后，客服将联系您确认订单</p>
+            <button class="close-btn" id="closeButton">关闭</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 产品ID校验（生产环境需后端验证）
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('id');
+            if (!productId || productId !== '1') {
+                alert('无效的产品ID，请从官方渠道访问');
+                window.history.back();
+            }
+
+            // 立即购买按钮与弹窗交互逻辑
+            const buyButton = document.getElementById('buyButton');
+            const paymentModal = document.getElementById('paymentModal');
+            const closeButton = document.getElementById('closeButton');
+
+            // 点击“立即购买”显示弹窗
+            buyButton.addEventListener('click', () => {
+                paymentModal.style.display = 'flex';
+            });
+
+            // 点击“关闭”按钮隐藏弹窗
+            closeButton.addEventListener('click', () => {
+                paymentModal.style.display = 'none';
+            });
+
+            // 点击弹窗遮罩层（非内容区）也隐藏弹窗
+            paymentModal.addEventListener('click', (e) => {
+                if (e.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
